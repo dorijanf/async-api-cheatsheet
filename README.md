@@ -40,11 +40,44 @@ to be available for use for the user. That is Computational bound work when disc
 !!!!**DON'T USE ASYNC ON THE SERVER SIDE FOR COMPUTATIONAL BOUND WORK**!!!!
 This causes the decline of scalability and performance.
 
+## Async / Await
+Making a method with the async modifier ensures that the await keyword can be used inside the method once or many times.
+We are also transforming the method into a state machine.
+
+The await operator tells the compiler that the async method can't continue until the awaited asynchronous process is complete.
+In the meantime control returns to the caller of the async method.
+
+:man_techologist: *When an async method doesn't contain an await operator, the method simply executes as a synchronous method does.*
+:man_techologist: *A method that is not marked with the async modifier cannot be awaited.*
+
+## Async Return Types
+Lets say we are calling a repository method that performs some operations and queries data from the database. If we call the method with the await keyboard and we make the method to be async, while the operation is performing, the control will return to the caller method which will continue its execution without waiting for the original control to finish. How do we know when the operation finishes then?
+That's where return types come in. An async method can have these return types:
+*void
+    really only advised for event handlers (a button click event in the client)
+    bad
+    difficult to test
+    hard to handle exceptions
+    can't notify the caller that it is finished
+*Task & Task<T>
+    Return Task if no return type otherwise check Task<T>, usualy executes asynchronously
+    Task Represents a single operation that returns nothing.
+    Task<T> Represents a single operation that returns a value of type T (Task<T>), usualy executes asynchronously
+    :man-technologist: *Task represents the execution of the async method, not the result of it!*
+    Both Task and Task<T> have a property Status, IsCanceled, IsCompleted and IsFaulted which determine
+    the state of the task.
+    The state machine manaages the task and the async keyword transforms the method into a state machine!
+*Types with accessible GetAwaiter() method (C#7)
+    Return any type that has an accessible GetAwaiter method. These are created because Task and Task<T>
+    are reference types and they can induce memory allocation in performance-critical paths, and that
+    can adversely affect performance
+    Supporting generalized return types allows return a lightweight value type.
+
 ### Terms and definitions
-*Thread* - A basic unit of CPU utilization
-*Multithreading* - One single CPU or single core in a multi-core CPU can execute multiple threads concurrently
-*Concurrency* - Condition that exists when at least two threads are making progress (Doesn't mean they are being run simultaneously, at the same time)
-*Parallelism* - When at least two threads are being run simultaneously, we can achieve this when the server has a multi core processor, we can not achieve it on a single core processor
+  * *Thread* - A basic unit of CPU utilization
+  * *Multithreading* - One single CPU or single core in a multi-core CPU can execute multiple threads concurrently
+  * *Concurrency* - Condition that exists when at least two threads are making progress (Doesn't mean they are being run simultaneously, at the same time)
+  * *Parallelism* - When at least two threads are being run simultaneously, we can achieve this when the server has a multi core processor, we can not achieve it on a single core processor
 
 ###### Legend
 :man_technologist: - Coding tips I find to be important  
